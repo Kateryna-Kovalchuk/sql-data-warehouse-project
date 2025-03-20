@@ -51,13 +51,12 @@
 ---
 
 ## 📂 Структура репозиторію  
-📁 datasets/ → Початкові CSV-дані (ERP, CRM)
-📁 docs/ → Схеми бази, моделювання, документація
-📁 scripts/ → SQL-скрипти для ETL-процесів
-📁 tests/ → Перевірка якості даних
-📄 README.md → Огляд проєкту
-📄 requirements.txt → Залежності
-
+📁 **datasets/**  → Початкові CSV-дані (ERP, CRM)  
+📁 **docs/**  → Схеми бази, моделювання, документація  
+📁 **scripts/**  → SQL-скрипти для ETL-процесів  
+📁 **tests/**  → Перевірка якості даних  
+📄 **README.md**  → Огляд проєкту  
+📄 **requirements.txt**  → Залежності  
 
 ---
 
@@ -127,12 +126,12 @@ The project follows the **Medallion Architecture**, structured into three layers
 ---
 
 ## 📂 Repository Structure  
-📁 datasets/ → Raw ERP and CRM data (CSV files)
-📁 docs/ → Schema, modeling, and documentation
-📁 scripts/ → SQL scripts for ETL and transformations
-📁 tests/ → Data quality tests
-📄 README.md → Project overview
-📄 requirements.txt → Dependencies
+📁 **datasets/**  → Raw ERP and CRM data (CSV files)  
+📁 **docs/**  → Schema, modeling, and documentation  
+📁 **scripts/**  → SQL scripts for ETL and transformations  
+📁 **tests/**  → Data quality tests  
+📄 **README.md**  → Project overview  
+📄 **requirements.txt**  → Dependencies  
 
 ## 🛡️ License  
 
