@@ -28,8 +28,8 @@
 
 ## 🛠️ Використані технології  
 
-✔ **SQL Server** – основна база даних  
-✔ **SSMS** – SQL Server Management Studio  
+✔ **PostgreSQL** – основна база даних  
+✔ **DBeaver** –  графічний інструмент для управління БД
 ✔ **DrawIO** – візуалізація архітектури даних  
 ✔ **GitHub** – контроль версій  
 ✔ **Notion** – планування та документація  
@@ -103,8 +103,8 @@ The project follows the **Medallion Architecture**, structured into three layers
 
 ## 🛠️ Technologies Used  
 
-✔ **SQL Server** – Primary database  
-✔ **SSMS** – SQL Server Management Studio  
+✔ **PostgreSQL** – Primary database system
+✔ **DBeaver** – Graphical tool for database management
 ✔ **DrawIO** – Data architecture visualization  
 ✔ **GitHub** – Version control  
 ✔ **Notion** – Project planning and documentation  
