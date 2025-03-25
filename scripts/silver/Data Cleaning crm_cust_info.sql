@@ -1,88 +1,93 @@
-select *
-from bronze.crm_cust_info cci 
+-- 🇺🇦 1. Перевірка первинного ключа на дублікат та NULL
+-- 🇬🇧 1. Checking primary key for duplicates and NULL values
 
--- 1. Перевіремо primary key на дублікати та NULL
+SELECT cst_id, COUNT(*) 
+FROM bronze.crm_cust_info  
+GROUP BY cst_id 
+HAVING COUNT(*) > 1 OR cst_id IS NULL
+ORDER BY 2;
 
-select 
-cst_id ,
-count(*) 
-from bronze.crm_cust_info  
-group by cst_id 
-having count(*)>1 or cst_id is null
-order by 2;
+-- 🇺🇦 2. Аналіз дублікатів для подальшої трансформації
+-- 🇬🇧 2. Analyzing duplicates for further transformation
 
--- тепер розглянемо, що всередені дублікатів, для подальшої трансформації
+SELECT *
+FROM bronze.crm_cust_info  
+WHERE cst_id = 29466;
 
-select *
-from bronze.crm_cust_info  
-where cst_id = 29466;
+-- 🇺🇦 3. Використання віконної функції для вибору останніх актуальних записів
+-- 🇬🇧 3. Using a window function to select the latest records
 
--- використаємо віконну функцію для того, щоб вибрати тільки свіжі дані
-select *, 
-row_number () over (PARTITION BY cst_id order by cst_create_date desc) as flag_last
-from bronze.crm_cust_info ;
+SELECT *, 
+       ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+FROM bronze.crm_cust_info;
 
-select *
-from (select *, 
-row_number () over (PARTITION BY cst_id order by cst_create_date desc) as flag_last
-from bronze.crm_cust_info) t where flag_last=1
--- перевіремо на конткретному прикладі
-select *
-from (select *, 
-row_number () over (PARTITION BY cst_id order by cst_create_date desc) as flag_last
-from bronze.crm_cust_info) t where flag_last=1 and cst_id = 29466
+SELECT *
+FROM (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+    FROM bronze.crm_cust_info
+) t 
+WHERE flag_last = 1;
 
+-- 🇺🇦 4. Перевірка на конкретному прикладі
+-- 🇬🇧 4. Checking a specific case
 
--- 2. Перевіремо всі текстові дані на небажані пробіли
--- ціль : відсутні значення
+SELECT *
+FROM (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+    FROM bronze.crm_cust_info
+) t 
+WHERE flag_last = 1 AND cst_id = 29466;
 
--- виведемо всі значення, де є пробіл в імені
-select cst_firstname 
-from bronze.crm_cust_info 
-where cst_firstname != trim(cst_firstname) 
+-- 🇺🇦 5. Перевірка текстових даних на пробіли
+-- 🇬🇧 5. Checking text data for unwanted spaces
 
-select cst_lastname  
-from bronze.crm_cust_info 
-where cst_lastname  != trim(cst_lastname) 
+SELECT cst_firstname 
+FROM bronze.crm_cust_info 
+WHERE cst_firstname != TRIM(cst_firstname);
 
-select cst_gndr  
-from bronze.crm_cust_info 
-where cst_gndr  != trim(cst_gndr) 
+SELECT cst_lastname  
+FROM bronze.crm_cust_info 
+WHERE cst_lastname  != TRIM(cst_lastname);
 
---  оновлений код, з урахуванням, ім'я та призвіще без пробілів
+SELECT cst_gndr  
+FROM bronze.crm_cust_info 
+WHERE cst_gndr  != TRIM(cst_gndr);
 
-select cst_id
-, cst_key
-, trim(cst_firstname) as cst_firstname
-, trim(cst_lastname) as cst_lastname
-, cst_marital_status
-, cst_gndr
-, cst_create_date
-from (select *, 
-row_number () over (PARTITION BY cst_id order by cst_create_date desc) as flag_last
-from bronze.crm_cust_info) t where flag_last=1
+-- 🇺🇦 6. Оновлення даних із виправленими пробілами
+-- 🇬🇧 6. Updating data with trimmed text fields
 
--- 3) Data Standardization & Consistency
-select distinct cst_gndr
-from bronze.crm_cust_info  
+SELECT cst_id, cst_key, TRIM(cst_firstname) AS cst_firstname, TRIM(cst_lastname) AS cst_lastname, 
+       cst_marital_status, cst_gndr, cst_create_date
+FROM (
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+    FROM bronze.crm_cust_info
+) t 
+WHERE flag_last = 1;
 
+-- 🇺🇦 7. Стандартизація та узгодженість даних
+-- 🇬🇧 7. Data Standardization & Consistency
 
-select distinct cst_gndr,
-case when upper(trim(cst_gndr)) = 'F' then 'Female'
-	when upper(trim(cst_gndr)) = 'M' then 'Male'
-	else 'n/a' end cst_gndr 
-from bronze.crm_cust_info  
+SELECT DISTINCT cst_gndr
+FROM bronze.crm_cust_info;
 
-select distinct cst_marital_status 
-from bronze.crm_cust_info  
+SELECT DISTINCT cst_gndr,
+       CASE WHEN UPPER(TRIM(cst_gndr)) = 'F' THEN 'Female'
+            WHEN UPPER(TRIM(cst_gndr)) = 'M' THEN 'Male'
+            ELSE 'n/a' END AS standardized_cst_gndr
+FROM bronze.crm_cust_info;
 
-select distinct cst_marital_status ,
-case when upper(trim(cst_marital_status )) = 'S' then 'Single'
-	when upper(trim(cst_marital_status )) = 'M' then 'Married'
-	else 'n/a' end cst_marital_status  
-from bronze.crm_cust_info  
+SELECT DISTINCT cst_marital_status 
+FROM bronze.crm_cust_info;
 
---  оновлений код і фінальний код, з урахуванням, гендеру, сімейного статусу та обробки null
+SELECT DISTINCT cst_marital_status,
+       CASE WHEN UPPER(TRIM(cst_marital_status)) = 'S' THEN 'Single'
+            WHEN UPPER(TRIM(cst_marital_status)) = 'M' THEN 'Married'
+            ELSE 'n/a' END AS standardized_cst_marital_status  
+FROM bronze.crm_cust_info;
+
+-- 🇺🇦 8. Вставка очищених та стандартизованих даних у таблицю silver
+-- 🇬🇧 8. Inserting cleaned and standardized data into the silver table
+
 INSERT INTO silver.crm_cust_info (
     cst_id, cst_key, cst_firstname, cst_lastname, 
     cst_marital_status, cst_gndr, cst_create_date
@@ -104,54 +109,34 @@ SELECT
     END AS cst_gndr,
     cst_create_date
 FROM (
-    SELECT *, 
-           ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+    SELECT *, ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
     FROM bronze.crm_cust_info
 ) t
-WHERE flag_last = 1 
-  AND cst_create_date IS NOT NULL;
- 
- -- перевірка чистоти даних
- 
---1) Перевіремо primary key на дублікати та NULL
- select 
-cst_id ,
-count(*) 
-from silver.crm_cust_info  
-group by cst_id 
-having count(*)>1 or cst_id is null
-order by 2;
+WHERE flag_last = 1 AND cst_create_date IS NOT NULL;
 
---2) перевірка на пробіли
+-- 🇺🇦 9. Перевірка чистоти даних у silver.crm_cust_info
+-- 🇬🇧 9. Checking data quality in silver.crm_cust_info
 
-select cst_firstname 
-from silver.crm_cust_info 
-where cst_firstname != trim(cst_firstname) 
+-- 🇺🇦 9.1 Перевірка дубліката первинного ключа та NULL
+-- 🇬🇧 9.1 Checking for duplicate primary keys and NULL values
+SELECT cst_id, COUNT(*)
+FROM silver.crm_cust_info  
+GROUP BY cst_id 
+HAVING COUNT(*) > 1 OR cst_id IS NULL
+ORDER BY 2;
 
-select cst_lastname  
-from silver.crm_cust_info 
-where cst_lastname  != trim(cst_lastname); 
+-- 🇺🇦 9.2 Перевірка на пробіли
+-- 🇬🇧 9.2 Checking for leading/trailing spaces
+SELECT cst_firstname FROM silver.crm_cust_info WHERE cst_firstname != TRIM(cst_firstname);
+SELECT cst_lastname FROM silver.crm_cust_info WHERE cst_lastname != TRIM(cst_lastname);
+SELECT cst_gndr FROM silver.crm_cust_info WHERE cst_gndr != TRIM(cst_gndr);
+SELECT cst_marital_status FROM silver.crm_cust_info WHERE cst_marital_status != TRIM(cst_marital_status);
 
-select cst_gndr  
-from silver.crm_cust_info 
-where cst_gndr  != trim(cst_gndr) ;
+-- 🇺🇦 9.3 Перевірка правильності змін значень у стовпцях "гендер" та "сімейний статус"
+-- 🇬🇧 9.3 Checking correctness of gender and marital status values
+SELECT DISTINCT cst_gndr FROM silver.crm_cust_info;
+SELECT DISTINCT cst_marital_status FROM silver.crm_cust_info;
 
-select cst_marital_status  
-from silver.crm_cust_info 
-where cst_marital_status  != trim(cst_marital_status) ;
-
--- 3) перевірка корректність зміни назв гендер та статус
-
-select distinct cst_gndr
-from silver.crm_cust_info  
-
-select distinct cst_marital_status
-from silver.crm_cust_info  
-
---4) відсутність null у даті
-
-select cst_create_date 
-from silver.crm_cust_info  
-where cst_create_date is null 
-
-  
+-- 🇺🇦 9.4 Перевірка відсутності NULL у стовпці дат
+-- 🇬🇧 9.4 Checking for NULL values in the date column
+SELECT cst_create_date FROM silver.crm_cust_info WHERE cst_create_date IS NULL;
