@@ -14,12 +14,13 @@
 🔸 **Bronze (Сирі дані):** збереження необроблених CSV-файлів із систем ERP та CRM у SQL Server.  
 🔸 **Silver (Очищені дані):** нормалізація, стандартизація та підготовка даних для аналітики.  
 🔸 **Gold (Аналітичні дані):** створення **зіркової схеми (star schema)** для ефективного аналізу.  
+    <td align="center"><img src="schemes/png/Architecture.drawio.png"/><br></td>
 
 ---
 
 ## 📌 Основні завдання  
 
-✅ **Створення сховища даних** на основі SQL Server.  
+✅ **Створення сховища даних** на основі PostgreSQL .  
 ✅ **ETL-процеси:** завантаження, трансформація та очищення даних.  
 ✅ **Моделювання даних:** побудова фактів і вимірювань для оптимальних SQL-запитів.  
 ✅ **Аналітика та звітність:** розробка SQL-звітів та інтерактивних дашбордів.  
@@ -89,7 +90,7 @@ The project follows the **Medallion Architecture**, structured into three layers
 🔸 **Bronze (Raw Data):** Storing unprocessed CSV files from ERP and CRM systems in SQL Server.  
 🔸 **Silver (Cleansed Data):** Standardizing and normalizing data for analytics.  
 🔸 **Gold (Business-Ready Data):** Creating a **star schema** for optimized analytical queries.  
-
+<td align="center"><img src="schemes/png/Architecture.drawio.png"/><br></td>
 ---
 
 ## 📌 Key Project Tasks  
@@ -114,7 +115,7 @@ The project follows the **Medallion Architecture**, structured into three layers
 ## 🚀 Project Requirements  
 
 ### 🎯 Building the Data Warehouse  
-- Import ERP and CRM data (CSV) into SQL Server  
+- Import ERP and CRM data (CSV) into PostgreSQL  
 - Clean and normalize the data  
 - Integrate sources into a single analytical model  
 
