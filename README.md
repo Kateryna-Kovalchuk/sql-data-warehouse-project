@@ -14,7 +14,7 @@
 🔸 **Bronze (Сирі дані):** збереження необроблених CSV-файлів із систем ERP та CRM у SQL Server.  
 🔸 **Silver (Очищені дані):** нормалізація, стандартизація та підготовка даних для аналітики.  
 🔸 **Gold (Аналітичні дані):** створення **зіркової схеми (star schema)** для ефективного аналізу.  
-    <td align="center"><img src="schemes/png/Architecture.drawio.png"/><br></td>
+    <td align="center"><img src="docs/schemes/png/Architecture.drawio.png"/><br></td>
 
 ---
 
@@ -90,7 +90,7 @@ The project follows the **Medallion Architecture**, structured into three layers
 🔸 **Bronze (Raw Data):** Storing unprocessed CSV files from ERP and CRM systems in SQL Server.  
 🔸 **Silver (Cleansed Data):** Standardizing and normalizing data for analytics.  
 🔸 **Gold (Business-Ready Data):** Creating a **star schema** for optimized analytical queries.  
-<td align="center"><img src="schemes/png/Architecture.drawio.png"/><br></td>
+<td align="center"><img src="docs/schemes/png/Architecture.drawio.png"/><br></td>
 ---
 
 ## 📌 Key Project Tasks  
