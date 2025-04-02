@@ -3,8 +3,6 @@
 📊 **Ласкаво просимо до репозиторію "Data Warehouse and Analytics Project"!**  
 Цей проєкт демонструє **повний цикл побудови сховища даних** – від збору та обробки інформації до отримання бізнес-інсайтів.  
 
-🌟 Ідеальний кейс для портфоліо, що відображає **кращі практики Data Engineering та Data Analytics**.  
-
 ---
 
 ## 🏗️ Архітектура даних  
@@ -78,8 +76,6 @@
 
 📊 **Welcome to the "Data Warehouse and Analytics Project" repository!**  
 This project demonstrates the **full data warehousing lifecycle** – from data collection and processing to business insights.  
-
-🌟 A perfect portfolio project showcasing **best practices in Data Engineering and Data Analytics**.  
 
 ---
 
